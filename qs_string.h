@@ -8,7 +8,7 @@
 #include <string.h>
 
 /**
- * Copy a section from the source string to dest, using a start and end index.
+ * Copy a slice from the source string given a start and end index to dest.
  * dest needs to have at least the size of (start + end + 1), the function automatically
  * appends a null terminator '\0' to the end of dest.
  *
@@ -18,7 +18,7 @@
  * @param dest   The destination in which the section start-to-end from source will be copied. dest needs to have at least
  * the size of (start + end + 1).
  */
-void qs_string_copy_substring(const char *source, size_t start, size_t end, char* dest)
+void qs_string_copy_slice(const char *source, size_t start, size_t end, char* dest)
 {
     if (start > end) return;
 
@@ -76,7 +76,7 @@ char **qs_string_split(const char *source, char split_at)
     for (i = 0; source[i] != '\0'; i += 1) {
         if (source[i] == split_at) {
             strings[strings_index] = malloc(sizeof(char) * (i - last_split_index - 1));
-            qs_string_copy_substring(source, last_split_index, i - 1, strings[strings_index]);
+            qs_string_copy_slice(source, last_split_index, i - 1, strings[strings_index]);
 
             last_split_index = i + 1;
             strings_index++;
@@ -92,7 +92,7 @@ char **qs_string_split(const char *source, char split_at)
 
 	if(last_split_index < i) {
 		strings[strings_index] = malloc(sizeof(char) * (i - last_split_index - 1));
-   		qs_string_copy_substring(source, last_split_index, i - 1, strings[strings_index]);
+        qs_string_copy_slice(source, last_split_index, i - 1, strings[strings_index]);
 	}
 
     return strings;
