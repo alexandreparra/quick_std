@@ -34,14 +34,14 @@ void test_string_split() {
     QS_ASSERT_TRUE(strcmp(strings[2], "text") == 0,   "split string position 2");
 }
 
-void test_string_copy_substring() {
-    printf("\nqs_string_copy_substring TESTS\n");
+void test_string_copy_slice() {
+    printf("\nqs_string_copy_slice TESTS\n");
     char *phrase = "some long phrase";
     char dest[5];
 
-    qs_string_copy_substring(phrase, 5, 8, dest);
+    qs_string_copy_slice(phrase, 5, 8, dest);
 
-    QS_ASSERT_TRUE(strcmp(dest, "long") == 0, "copy substring");
+    QS_ASSERT_TRUE(strcmp(dest, "long") == 0, "copy slice");
 }
 
 void test_dyn_array() {
@@ -88,12 +88,14 @@ void test_typed_dyn_array() {
     qs_dyn_array_int_append(int_array, &i);
     int *pos_2 = qs_dyn_array_int_get(int_array, 2);
     QS_ASSERT_TRUE(*pos_2 == 3, "Assert array position 2 to value 3 with realloc");
+
+    qs_dyn_array_int_free(int_array);
 }
 
 int main() {
     test_string_contains();
     test_string_split();
-    test_string_copy_substring();
+    test_string_copy_slice();
 
     test_dyn_array();
     test_typed_dyn_array();
