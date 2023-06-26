@@ -3,4 +3,4 @@ project(quick_std_tests C)
 
 set(CMAKE_C_STANDARD 17)
 
-add_executable(quick_std main.c ../qs_typed_dyn_array.h ../qs_string.h ../qs_unit_test.h ../qs_dyn_array.h)
+add_executable(quick_std main.c ../qs_typed_dyn_array.h ../qs_string.h ../qs_dyn_array.h)
