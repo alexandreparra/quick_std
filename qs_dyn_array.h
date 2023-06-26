@@ -1,10 +1,12 @@
 // Copyright (C) 2023 Alexandre Parra (duffhd)
-// This file is licensed under the BSD-3-Clause.
+// This file is licensed under the BSD 3-Clause.
 
 #pragma once
 
 #include <malloc.h>
 #include <stdio.h>
+#include <stdint.h>
+#include <string.h>
 
 typedef struct {
     void   *data;
@@ -13,22 +15,29 @@ typedef struct {
     size_t data_size;
 } QsDynArray;
 
-QsDynArray *qs_dyn_array_alloc(size_t size, size_t data_size) {
+QsDynArray *qs_dyn_array_alloc(size_t init_size, size_t data_size) {
     QsDynArray *array = malloc(sizeof(QsDynArray));
     if (array == NULL) return NULL;
 
-    array->data = malloc(size);
+    array->data = malloc(init_size * data_size);
     if (array->data == NULL) {
-       fre(array);
+       free(array);
        return NULL;
     }
 
     array->len       = 0;
-    array->capacity  = size;
-    array->data_size = data_size
+    array->capacity  = init_size;
+    array->data_size = data_size;
+
+    return array;
 }
 
-int qs_dyn_array_insert(QsDynArray *array, void *item) {
+void qs_dyn_array_free(QsDynArray *array) {
+    free(array->data);
+    free(array);
+}
+
+size_t qs_dyn_array_append(QsDynArray *array, void *item) {
     if(array->len == array->capacity) {
         array->capacity += array->capacity / 2; 
         void *new_data = realloc(array->data, array->capacity);
@@ -37,8 +46,14 @@ int qs_dyn_array_insert(QsDynArray *array, void *item) {
         array->data = new_data;
     }
 
-    array->len++;
-    memcpy((uint8_t) array->data + (array->len * array->data_size), item, array->data_size);
+    size_t index = array->len++;
+    memcpy((uint8_t *) array->data + (index * array->data_size), item, array->data_size);
 
-    return array->len;
+    return index;
+}
+
+void *qs_dyn_array_get(QsDynArray *array, size_t pos) {
+    if (pos > array->len) return NULL;
+
+    return (uint8_t *) array->data + (pos * array->data_size);
 }
