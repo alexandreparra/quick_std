@@ -36,6 +36,11 @@ QsDynArray_##type *qs_dyn_array_##type##_alloc(size_t size) \
     return array;                                                 \
 } \
 \
+void qs_dyn_array_##type##_free(QsDynArray_##type *array) \
+{ \
+    free(array->data); \
+    free(array);       \
+} \
 size_t qs_dyn_array_##type##_append(QsDynArray_##type *array, const type *item) \
 { \
     if(array->len == array->capacity) {                         \
