@@ -64,6 +64,19 @@ bool qs_string_contains(const char *source, const char *comparison)
     return false;
 }
 
+/**
+ * Split the string source given a character split_at and return a list of strings removing the character:
+ *
+ * \code
+ * char *phrase = "some text";
+ * char **result = qs_string_split(phrase, ' '); // Split at an empty text
+ * // result = ["some", "text"]
+ * \endcode
+ *
+ * @param source   The string that will be split.
+ * @param split_at The character that delimits where the string will be split.
+ * @return Array of strings.
+ */
 char **qs_string_split(const char *source, char split_at)
 {
     size_t default_size  = 5;
