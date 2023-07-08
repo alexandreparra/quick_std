@@ -21,8 +21,8 @@ QsDynArray *qs_dyn_array_alloc(size_t init_size, size_t data_size) {
 
     array->data = malloc(init_size * data_size);
     if (array->data == NULL) {
-       free(array);
-       return NULL;
+        free(array);
+        return NULL;
     }
 
     array->len       = 0;
@@ -38,8 +38,8 @@ void qs_dyn_array_free(QsDynArray *array) {
 }
 
 size_t qs_dyn_array_append(QsDynArray *array, void *item) {
-    if(array->len == array->capacity) {
-        array->capacity += array->capacity / 2; 
+    if (array->len == array->capacity) {
+        array->capacity += array->capacity / 2;
         void *new_data = realloc(array->data, array->capacity);
         if (new_data == NULL) return -1;
 

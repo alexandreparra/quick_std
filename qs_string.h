@@ -18,13 +18,12 @@
  * @param dest   The destination in which the section start-to-end from source will be copied. dest needs to have at least
  * the size of (start + end + 1).
  */
-void qs_string_copy_slice(const char *source, size_t start, size_t end, char* dest)
-{
+void qs_string_copy_slice(const char *source, size_t start, size_t end, char *dest) {
     if (start > end) return;
 
     size_t i;
     for (i = 0; i < end - start + 1; i++)
-        dest[i] = source[i+start];
+        dest[i] = source[i + start];
     dest[i] = '\0';
 }
 
@@ -34,8 +33,7 @@ void qs_string_copy_slice(const char *source, size_t start, size_t end, char* de
  * @param comparison  The string which will be compared and seen if its contained inside 'source'.
  * @return            True or false if the string from comparison is contained inside source or not.
  */
-bool qs_string_contains(const char *source, const char *comparison)
-{
+bool qs_string_contains(const char *source, const char *comparison) {
     size_t source_size     = strlen(source);
     size_t comparison_size = strlen(comparison);
 
@@ -48,11 +46,12 @@ bool qs_string_contains(const char *source, const char *comparison)
     for (size_t i = 0; i < (source_size - comparison_size + 1); i += 1) {
         if (source[i] == comparison[0]) {
             size_t counter = 0;
+
             for (size_t j = 0; j < comparison_size; j += 1) {
-                if (source[i+j] != comparison[j]) {
+                if (source[i + j] != comparison[j]) {
                     break;
                 } else {
-                   counter += 1;
+                    counter += 1;
                 }
             }
 
@@ -77,11 +76,10 @@ bool qs_string_contains(const char *source, const char *comparison)
  * @param split_at The character that delimits where the string will be split.
  * @return Array of strings.
  */
-char **qs_string_split(const char *source, char split_at)
-{
+char **qs_string_split(const char *source, char split_at) {
     size_t default_size  = 5;
     size_t strings_index = 0;
-    char **strings = malloc(sizeof(char) * default_size);
+    char   **strings     = malloc(sizeof(char) * default_size);
 
     size_t last_split_index = 0;
 
@@ -94,19 +92,19 @@ char **qs_string_split(const char *source, char split_at)
             last_split_index = i + 1;
             strings_index++;
 
-	        if(strings_index == i) {
-		        char **result = realloc(strings, default_size + 5);
+            if (strings_index == i) {
+                char **result = realloc(strings, default_size + 5);
                 if (result != NULL) {
                     strings = result;
                 }
-	        }
+            }
         }
     }
 
-	if(last_split_index < i) {
-		strings[strings_index] = malloc(sizeof(char) * (i - last_split_index - 1));
+    if (last_split_index < i) {
+        strings[strings_index] = malloc(sizeof(char) * (i - last_split_index - 1));
         qs_string_copy_slice(source, last_split_index, i - 1, strings[strings_index]);
-	}
+    }
 
     return strings;
 }
