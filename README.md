@@ -18,3 +18,7 @@ QS_DYN_ARRAY_DEFINE(int)
 // on the type provided for the macro (in this case 'int').
 QsDynArray_int *array = qs_dyn_array_int_alloc(5);
 ```
+
+## qs_linked_list
+Generic linked list implemented with `void *`. QsLinkedList maintains internally the size of the data each node
+points to, the linked list (QsLinkedList) and nodes (QsNode) are separated structures.
