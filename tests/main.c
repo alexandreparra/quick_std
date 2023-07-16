@@ -122,7 +122,6 @@ void test_linked_list(void) {
     ret = qs_linked_list_remove(list, 2);
     QS_ASSERT_TRUE(ret == 0, "Remove value 3 from position 2");
 
-    qs_linked_list_append(list, &i);
     ret = qs_linked_list_remove(list, 1);
     QS_ASSERT_TRUE(ret == 0, "Remove value 2 from position 1");
 
