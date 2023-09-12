@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include <malloc.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>

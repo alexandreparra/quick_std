@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include <malloc.h>
+#include <stdlib.h>
 #include <stdio.h>
 
 struct node {
@@ -16,11 +16,11 @@ typedef struct node QsNode;
 typedef struct {
     QsNode *head;
     size_t data_size;
-}                   QsLinkedList;
+} QsLinkedList;
 
 QsNode *create_node(void *data, size_t data_size) {
     QsNode *node = malloc(sizeof(QsNode));
-    node->data = malloc(data_size);
+    node->data   = malloc(data_size);
     memcpy(node->data, data, data_size);
 
     node->next = NULL;
@@ -29,8 +29,8 @@ QsNode *create_node(void *data, size_t data_size) {
 
 QsLinkedList *qs_linked_list_alloc(void *init_value, size_t data_size) {
     QsLinkedList *list = malloc(sizeof(QsLinkedList));
-    list->data_size = data_size;
-    list->head      = create_node(init_value, data_size);
+    list->data_size    = data_size;
+    list->head         = create_node(init_value, data_size);
     return list;
 }
 
@@ -64,7 +64,8 @@ int qs_linked_list_remove(QsLinkedList *list, size_t pos) {
     if (pos == 0) {
         if (list->head->next != NULL) {
             QsNode *temp = list->head;
-            list->head = list->head->next;
+            list->head   = list->head->next;
+
             free(temp->data);
             free(temp);
             return 0;
