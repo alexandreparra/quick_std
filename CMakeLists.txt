@@ -3,6 +3,8 @@ project(quick_std C)
 
 set(CMAKE_C_STANDARD 17)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 add_library(quick_std INTERFACE
         qs_dyn_array.h
         qs_linked_list.h
