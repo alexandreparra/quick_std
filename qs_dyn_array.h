@@ -15,6 +15,11 @@ typedef struct {
     size_t data_size;
 } QsDynArray;
 
+/**
+ * Dynamic array that automatically grows if needed.
+ * For the current implementation, memory is not aligned by default, this may slow the array
+ * operations. 
+ */
 QsDynArray *qs_dyn_array_alloc(size_t init_size, size_t data_size) {
     QsDynArray *array = malloc(sizeof(QsDynArray));
     if (array == NULL) return NULL;
