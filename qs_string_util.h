@@ -7,6 +7,8 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "qs_dyn_array.h"
+
 /**
  * Copy a slice from the source string given a start and end index to dest.
  * dest needs to have at least the size of (start + end + 1), the function automatically
@@ -18,7 +20,8 @@
  * @param dest   The destination in which the section start-to-end from source will be copied. dest needs to have at least
  * the size of (start + end + 1).
  */
-void qs_string_copy_slice(const char *source, size_t start, size_t end, char *dest) {
+void qs_string_copy_slice(const char *source, size_t start, size_t end, char *dest) 
+{
     if (start > end) return;
 
     size_t i;
@@ -33,7 +36,8 @@ void qs_string_copy_slice(const char *source, size_t start, size_t end, char *de
  * @param comparison  The string which will be compared and seen if its contained inside 'source'.
  * @return            True or false if the string from comparison is contained inside source or not.
  */
-bool qs_string_contains(const char *source, const char *comparison) {
+bool qs_string_contains(const char *source, const char *comparison) 
+{
     size_t source_size     = strlen(source);
     size_t comparison_size = strlen(comparison);
 
@@ -68,7 +72,7 @@ bool qs_string_contains(const char *source, const char *comparison) {
  *
  * \code
  * char *phrase = "some text";
- * char **result = qs_string_split(phrase, ' '); // Split at an empty text
+ * QsDynArray *result = qs_string_split(phrase, ' '); // Split at an empty text
  * // result = ["some", "text"]
  * \endcode
  *
@@ -76,35 +80,29 @@ bool qs_string_contains(const char *source, const char *comparison) {
  * @param split_at The character that delimits where the string will be split.
  * @return Array of strings.
  */
-char **qs_string_split(const char *source, char split_at) {
+QsDynArray *qs_string_split(const char *source, char split_at) 
+{
     size_t default_size  = 5;
-    size_t strings_index = 0;
-    char   **strings     = malloc(sizeof(char) * default_size);
+    QsDynArray *strings = qs_dyn_array_alloc(default_size, sizeof (char *));
 
     size_t last_split_index = 0;
 
     size_t i;
     for (i = 0; source[i] != '\0'; i += 1) {
         if (source[i] == split_at) {
-            strings[strings_index] = malloc(sizeof(char) * (i - last_split_index - 1));
-            qs_string_copy_slice(source, last_split_index, i - 1, strings[strings_index]);
+            char *str = malloc(sizeof(char) * (i - last_split_index - 1));
+            qs_string_copy_slice(source, last_split_index, i - 1, str); 
+            qs_dyn_array_append(strings, str);
 
             last_split_index = i + 1;
-            strings_index++;
-
-            if (strings_index == i) {
-                char **result = realloc(strings, default_size + 5);
-                if (result != NULL) {
-                    strings = result;
-                }
-            }
         }
     }
 
     if (last_split_index < i) {
-        strings[strings_index] = malloc(sizeof(char) * (i - last_split_index - 1));
-        qs_string_copy_slice(source, last_split_index, i - 1, strings[strings_index]);
+        char *str = malloc(sizeof(char) * (i - last_split_index - 1));
+        qs_string_copy_slice(source, last_split_index, i - 1, str); 
+        qs_dyn_array_append(strings, str);
     }
-
+    
     return strings;
 }
