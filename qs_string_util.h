@@ -74,11 +74,12 @@ bool qs_string_contains(const char *source, const char *comparison)
  * char *phrase = "some text";
  * QsDynArray *result = qs_string_split(phrase, ' '); // Split at an empty text
  * // result = ["some", "text"]
+ * qs_dyn_array_free(result); // Don't forget to clean up the array.
  * \endcode
  *
  * @param source   The string that will be split.
  * @param split_at The character that delimits where the string will be split.
- * @return Array of strings.
+ * @return QsDynArray of char *.
  */
 QsDynArray *qs_string_split(const char *source, char split_at) 
 {
