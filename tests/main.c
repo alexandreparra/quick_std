@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 #include "../qs_dyn_array.h"
-#include "../qs_string.h"
+#include "../qs_string_util.h"
 #include "../qs_typed_dyn_array.h"
 #include "../qs_linked_list.h"
 
@@ -35,11 +35,13 @@ void test_string_contains(void) {
 
 void test_string_split(void) {
     QS_PRINT_WHITE("\nqs_string_split TESTS\n");
-    char **strings = qs_string_split("some spaced text", ' ');
+    QsDynArray *strings = qs_string_split("some spaced text", ' ');
 
-    QS_ASSERT_TRUE(strcmp(strings[0], "some") == 0,   "split string position 0");
-    QS_ASSERT_TRUE(strcmp(strings[1], "spaced") == 0, "split string position 1");
-    QS_ASSERT_TRUE(strcmp(strings[2], "text") == 0,   "split string position 2");
+    QS_ASSERT_TRUE(strcmp(qs_dyn_array_get(strings, 0), "some") == 0,   "split string position 0 'some'");
+    QS_ASSERT_TRUE(strcmp(qs_dyn_array_get(strings, 1), "spaced") == 0, "split string position 1 'spaced'");
+    QS_ASSERT_TRUE(strcmp(qs_dyn_array_get(strings, 2), "text") == 0,   "split string position 2 'textx'");
+
+    qs_dyn_array_free(strings);
 }
 
 void test_string_copy_slice(void) {
