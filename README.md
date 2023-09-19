@@ -23,5 +23,7 @@ Generic linked list implemented with `void *`. QsLinkedList maintains internally
 points to, the linked list (QsLinkedList) and nodes (QsNode) are separated structures.
 
 ### qs_string
-Simple functions to expand string manipulation.
+A dedicated container for handling strings and concatenation.
 
+### qs_string_util
+Simple string utilities (not tied to the dedicated container string inside `qs_string`).
