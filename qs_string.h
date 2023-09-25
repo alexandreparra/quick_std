@@ -45,9 +45,9 @@ void qs_string_empty_alloc(QsString *string, size_t initial_size)
     string->buffer   = (char *) malloc(sizeof(char *) * initial_size);
 }
 
-void qs_string_concat(QsString *string, char *new_slice, size_t slice_size) 
+void qs_string_concat(QsString *string, const char *new_slice, size_t slice_size)
 {
-    check_and_realloc_capacity(string, slice_size);
+    check_and_realloc_capacity(string, slice_size + 1);
 
     size_t i = 0;
     for (; i < slice_size; i++) {
@@ -59,3 +59,8 @@ void qs_string_concat(QsString *string, char *new_slice, size_t slice_size)
     string->size += slice_size;
 }
 
+void qs_string_clear(QsString *string)
+{
+    memset(string->buffer, 0, string->capacity);
+    string->size = 0;
+}
