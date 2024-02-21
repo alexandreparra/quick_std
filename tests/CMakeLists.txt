@@ -4,8 +4,12 @@ project(quick_std_tests C)
 set(CMAKE_C_STANDARD 17)
 
 add_executable(quick_std main.c
+        ../qs_arena.h
         ../qs_typed_dyn_array.h
         ../qs_string.h
         ../qs_string_util.h
         ../qs_dyn_array.h
-        ../qs_linked_list.h)
+        ../qs_linked_list.h
+
+        ../qs_def.h
+)

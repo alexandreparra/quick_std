@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+#include "../qs_arena.h"
 #include "../qs_dyn_array.h"
 #include "../qs_string_util.h"
 #include "../qs_typed_dyn_array.h"
@@ -175,6 +176,34 @@ void test_ring_buffer(void)
     qs_ring_buffer_free(rb);
 }
 
+void test_arena(void)
+{
+    QS_PRINT_WHITE("\nqs_arena TESTS\n");
+
+    QsArena arena = {0};
+    qs_arena_init(&arena, 8);
+    if (sizeof(void *) == 8) {
+        // Because the default alignment is sizeof(void *), in 64bit architectures
+        // an Arena with only 8 bytes of size can't properly hold 2 ints, that's because
+        // the first int takes 4 bytes, and the next int starts at the default architecture
+        // alignment, which is 8, meaning that for this to succeed we would need 12 bytes in
+        // the arena.
+        int *i1 = qs_arena_alloc(&arena, sizeof(int));
+        QS_ASSERT_TRUE(i1 != NULL, "First arena allocation of an int is not null");
+        int *i2 = qs_arena_alloc(&arena, sizeof(int));
+        QS_ASSERT_TRUE(i2 == NULL, "Second int allocation fails because of the default alignment");
+    }
+
+    if (sizeof(void *) == 4) {
+        int *i1 = qs_arena_alloc(&arena, sizeof(int));
+        QS_ASSERT_TRUE(i1 != NULL, "Arena allocation of int on 32bits architecture is correct");
+        int *i2 = qs_arena_alloc(&arena, sizeof(int));
+        QS_ASSERT_TRUE(i2 != NULL, "Second allocation of int doesn't have sufficient size");
+    }
+
+    qs_arena_free(&arena);
+}
+
 int main() 
 {
     test_string_contains();
@@ -188,5 +217,6 @@ int main()
 
     test_ring_buffer();
 
+    test_arena();
     return 0;
 }
