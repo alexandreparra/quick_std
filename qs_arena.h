@@ -7,11 +7,19 @@
 
 #include "qs_def.h"
 
-static int is_power_of_two(uintptr_t x) {
+#ifdef QSNAMES
+#define QsArena Arena
+#define qs_arena_init  arena_init
+#define qs_arena_alloc arena_alloc
+#define qs_arena_drain arena_drain
+#define qs_arena_free  arena_free
+#endif
+
+internal int is_power_of_two(uintptr_t x) {
 	return (x & (x-1)) == 0;
 }
 
-static uintptr_t align_forward(uintptr_t ptr, size_t align) {
+internal uintptr_t align_forward(uintptr_t ptr, size_t align) {
 	uintptr_t a, modulo;
 
 	assert(is_power_of_two(align));
@@ -33,9 +41,9 @@ typedef struct {
 	void     *buffer;
 	size_t    buffer_size;
 	uintptr_t current_offset;
-} QsArena;
+} Arena;
 
-int qs_arena_init(QsArena *arena, size_t init_size) {
+int arena_init(Arena *arena, size_t init_size) {
     arena->buffer = malloc(init_size);
     if (arena->buffer == NULL) return FAILURE;
 
@@ -45,7 +53,7 @@ int qs_arena_init(QsArena *arena, size_t init_size) {
     return SUCCESS;
 }
 
-void *qs_arena_alloc(QsArena *arena, size_t size) {
+void *arena_alloc(Arena *arena, size_t size) {
     uintptr_t current_ptr = (uintptr_t) arena->buffer + arena->current_offset; 
     uintptr_t offset      = align_forward(current_ptr, DEFAULT_ALIGN);
 
@@ -61,11 +69,10 @@ void *qs_arena_alloc(QsArena *arena, size_t size) {
     return ptr;
 }
 
-void qs_arena_drain(QsArena *arena) {
+void arena_drain(Arena *arena) {
 	arena->current_offset = 0;
 }
 
-void qs_arena_free(QsArena *arena) {
+void arena_free(Arena *arena) {
     free(arena->buffer);
 }
-
