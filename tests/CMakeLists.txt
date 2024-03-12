@@ -6,11 +6,10 @@ add_compile_definitions(QSNAMES)
 
 add_executable(quick_std main.c
         ../qs_arena.h
-        ../qs_typed_dyn_array.h
+        ../qs_typed_array.h
         ../qs_string.h
         ../qs_string_util.h
-        ../qs_dyn_array.h
-        ../qs_linked_list.h
+        ../qs_array.h
 
         ../qs_def.h
 )
