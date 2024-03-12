@@ -23,7 +23,6 @@ typedef struct {
 } Array;
 
 Array array_alloc(size_t buffer_size, size_t data_size) {
-    assert((double) buffer_size / (double) data_size == 0);
     void *buffer = malloc(data_size * buffer_size);
     assert(buffer != NULL);
     
@@ -58,7 +57,7 @@ size_t array_append(Array *array, void *item) {
 }
 
 void *array_get(Array *array, size_t pos) {
-    assert(pos < array->count);
+    assert(pos < array->capacity);
 
     return((u8 *) array->buffer + (pos * array->data_size));
 }
