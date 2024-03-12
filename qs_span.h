@@ -8,7 +8,8 @@
 
 #ifdef QSNAMES
 #define QsSpan Span 
-#define qs_span_init span_init 
+#define qs_span_init    span_init 
+#define qs_span_foreach span_foreach
 #endif
 
 /// A span, or fat pointer, is a structure with a pointer to a raw array and the total array size.
