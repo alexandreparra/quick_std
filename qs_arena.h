@@ -70,8 +70,3 @@ void *arena_alloc(Arena *arena, size_t size) {
 void arena_drain(Arena *arena) {
 	arena->current_offset = 0;
 }
-
-void arena_free(Arena *arena) {
-    assert(arena->buffer != NULL);
-    free(arena->buffer);
-}
