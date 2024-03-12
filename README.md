@@ -1,29 +1,45 @@
 ## quick_std
-Quick std (`qs` for short) is a simple header only library that contains additional functionality
-to the C programming language including utilities for strings and data structures.
+Quick std (`qs` for short) is a simple header only library that expands on (the very limited) C
+standard library. Some much needed structures that you would need to hand-wire yourself in every
+code base can be found here. 
 
-This is only an experimental project to try different ideas and should not be taken seriously.
+The primary goal is to provide bare bones structures that can be easily used in many programs, 
+while being minimal, simple and as flexible as possible. No over generalization, nor high 
+specialization will be done for any of the structures here, as they are simple enough, you can 
+change them in the best way for your program.
 
-### qs_dyn_array
-Dynamic array (dyn array for short) implementation using C using `void *`.
+For the time being, the structures are all experimental and are being tested on other code bases.
+The API may change drastically, or some headers may be deleted.
 
-### qs_typed_dyn_array
-The same as the "generic" QsDynArray but the code for the array is generated with a macro:
-```c
-// Define a new dynamic array using the macro
-QS_DYN_ARRAY_DEFINE(int)
+### QSNAMES
+The data structures and utility functions contained here are mostly named like `Array`, or 
+`string_init`, if this collides with some function or other library that you have, simply define in
+your build system `QSNAMES` so that the structures and functions take names like: `QsArena`, or
+`qs_array_append`.
 
-// The macro will generate function and struct names based 
-// on the type provided for the macro (in this case 'int').
-QsDynArray_int *array = qs_dyn_array_int_alloc(5);
-```
+### qs_arena.h
+A simple arena implementation that can return aligned memory from a big allocation, making it 
+useful for allocation that share the same lifetime.
 
-### qs_linked_list
-Generic linked list implemented with `void *`. QsLinkedList maintains internally the size of the data each node
-points to, the linked list (QsLinkedList) and nodes (QsNode) are separated structures.
+### qs_array.h
+A dynamic array that can track how much space it has left and increase its size. It's buffer is 
+allocated using malloc internally, meaning that a free is required by using `array\_free()`. 
 
-### qs_string
-A dedicated container for handling strings and concatenation.
+If you wish to use a custom allocator to provide the buffer to the array, use a Span instead, since 
+reallocating the size of a custom allocator, like an Arena, would require much more work, and the
+array wouldn't know how to do it internally, making this use case very specialized.
 
-### qs_string_util
-Simple string utilities (not tied to the dedicated container string inside `qs_string`).
+### qs_span.h
+A span, or fat pointer, is just a structure that wraps a pointer to a raw array and its size.
+Because of array decay in C, we loose the size information for raw arrays when passing them to
+functions. Wrapping the values in the structure, we can carry around information to safely index 
+the raw array.
+
+### qs_string.h
+A simple string struct that has a buffer and a size. This eliminates the use of null terminated
+strings for **only some use cases**, making it easy to traverse the string and safely know it's 
+size.
+
+### qs_string_util.h
+Simple null terminated string utilities (not tied to the dedicated container string inside 
+`qs_string`).
