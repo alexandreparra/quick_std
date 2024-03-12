@@ -1,58 +1,61 @@
 #pragma once
 
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef QSNAMES
+#define QsRingBuffer RingBuffer
+#define qs_ring_buffer_init  ring_buffer_init
+#define qs_ring_buffer_write ring_buffer_write
+#define qs_ring_buffer_read  ring_buffer_read
+#endif
+
 typedef struct {
     void  *buffer;
-    size_t length;
+    size_t size;
     size_t read_at;
     size_t write_at;
     size_t data_size;
-} QsRingBuffer;
+} RingBuffer;
 
-QsRingBuffer *qs_ring_buffer_alloc(size_t size, size_t data_size)
-{
-    QsRingBuffer *ring_buffer = malloc(sizeof(QsRingBuffer));
-    ring_buffer->buffer    = malloc(data_size * size);
-    ring_buffer->length    = size;
-    ring_buffer->read_at   = 0;
-    ring_buffer->write_at  = 0;
-    ring_buffer->data_size = data_size;
+RingBuffer ring_buffer_alloc(void *buffer, size_t size, size_t data_size) {
+    assert(buffer != NULL);
 
-    return ring_buffer;
+
+    RingBuffer rb = {
+        .buffer    = buffer,
+        .size      = size,
+        .read_at   = 0,
+        .write_at  = 0,
+        .data_size = data_size
+    };
+
+    return(rb);
 }
 
-void qs_ring_buffer_write(QsRingBuffer *ring_buffer, void *item)
-{
-    if (ring_buffer->write_at >= ring_buffer->length) {
+void ring_buffer_write(RingBuffer *ring_buffer, void *item) {
+    if (ring_buffer->write_at >= ring_buffer->size) {
         ring_buffer->write_at = 0;
     }
 
-    memcpy((uintptr_t *) ring_buffer->buffer + (ring_buffer->write_at * ring_buffer->data_size), item, ring_buffer->data_size);
+    memcpy(
+        (uintptr_t *) ring_buffer->buffer + (ring_buffer->write_at * ring_buffer->data_size), 
+        item, 
+        ring_buffer->data_size
+    );
 
     ring_buffer->write_at++;
 }
 
-void *qs_ring_buffer_read(QsRingBuffer *ring_buffer)
-{
-    if (ring_buffer->read_at >= ring_buffer->length) {
+void *ring_buffer_read(RingBuffer *ring_buffer) {
+    if (ring_buffer->read_at >= ring_buffer->size) {
         ring_buffer->read_at = 0;
     }
 
     void *item = (uintptr_t *) ring_buffer->buffer + (ring_buffer->read_at * ring_buffer->data_size);
     ring_buffer->read_at++;
 
-    return item;
+    return(item);
 }
 
-inline void qs_ring_buffer_change_size(QsRingBuffer *ring_buffer, size_t new_size)
-{
-    ring_buffer->length = new_size;
-}
-
-void qs_ring_buffer_free(QsRingBuffer *ring_buffer)
-{
-    free(ring_buffer->buffer);
-    free(ring_buffer);
-}

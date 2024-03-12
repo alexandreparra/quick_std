@@ -3,64 +3,66 @@
 
 #pragma once
 
+#include <assert.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+
+#ifdef QSNAMES
+#define QsString String
+#define qs_string_compare  string_compare
+#define qs_string_equals   string_equals
+#define qs_string_contains string_contains
+#endif
 
 typedef struct {
     char  *buffer;
     size_t size;
-    size_t capacity; // not meant to be used externally
-} QsString;
+} String;
 
-static inline void check_and_realloc_capacity(QsString *string, size_t slice_size) 
-{
-     if (string->capacity < (slice_size + string->size)) {
-        string->capacity = (string->capacity < slice_size)
-            ? string->capacity * 2 + slice_size 
-            : string->capacity * 2;
+String string_init(char *string, size_t size) {
+    String str = { string, size };
+    return(str);
+}
 
-        char *new_string_buffer = (char *) realloc(string->buffer, string->capacity);
+bool string_equals(String *str1, String *str2) {
+    assert(str1 != NULL);
+    assert(str2 != NULL);
 
-        if (new_string_buffer != NULL) {
-            string->buffer = new_string_buffer;
+    if (str1->size != str2->size) {
+        return(false);
+    }
+
+    for (size_t i = 0; i < str1->size; i++) {
+        if (str1->buffer[i] != str2->buffer[i]) return(false);
+    }
+
+    return(true);
+}
+
+/// See if the 'self' string is contained inside the 'other' string.
+bool string_contains(String *self, String *other) {
+    assert(self != NULL);
+    assert(other != NULL);
+
+    if (self->size < other->size) return(false);
+
+    for (size_t i = 0; i < (self->size - other->size); i++) {
+        if (self->buffer[i] == other->buffer[0]) {
+            size_t counter = 0;
+
+            for (size_t j = 0; j < other->size; j++) {
+                if (self->buffer[i + j] == other->buffer[j]) {
+                    counter += 1;
+                } else {
+                    break;
+                }
+            }
+
+            if (counter == other->size) return(true);
         }
-    }
+    } 
+
+    return(false);
 }
 
-void qs_string_alloc(QsString *string, char *initial_string, size_t initial_size) 
-{
-    string->capacity = initial_size;
-    string->size     = initial_size;
-    string->buffer   = (char *) malloc(sizeof(char *) * initial_size);
-
-    if (initial_string != NULL) {
-        strcpy(string->buffer, initial_string);
-    }
-}
-
-void qs_string_empty_alloc(QsString *string, size_t initial_size) 
-{
-    string->capacity = initial_size;
-    string->size     = initial_size;
-    string->buffer   = (char *) malloc(sizeof(char *) * initial_size);
-}
-
-void qs_string_concat(QsString *string, const char *new_slice, size_t slice_size)
-{
-    check_and_realloc_capacity(string, slice_size + 1);
-
-    size_t i = 0;
-    for (; i < slice_size; i++) {
-        string->buffer[i + string->size] = new_slice[i];
-    }
-
-    string->buffer[i + string->size] = '\0';
-
-    string->size += slice_size;
-}
-
-void qs_string_clear(QsString *string)
-{
-    memset(string->buffer, 0, string->capacity);
-    string->size = 0;
-}
