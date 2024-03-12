@@ -29,7 +29,7 @@
  */
 void qs_string_copy_slice(const char *source, size_t start, size_t end, char *target) 
 {
-    assert(strlen(target) >= (start + end + 1));
+    assert(strlen(source) >= (start + end));
     assert(start < end);
 
     if (start > end) return;
