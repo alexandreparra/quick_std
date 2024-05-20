@@ -1,4 +1,4 @@
-// Copyright (C) 2023 Alexandre Parra (duffhd)
+// Copyright (C) 2023-2024 Alexandre Parra (duffhd)
 // This file is licensed under the BSD-3-Clause.
 
 #pragma once
@@ -11,8 +11,8 @@
 #include "qs_array.h"
 
 #ifdef QSNAMES
-#define qs_null_string_compare null_string_compare 
-#define qs_string_compare string_compare
+#define qs_raw_string_copy_slice raw_string_copy_slice
+#define qs_raw_string_compare    raw_string_compare
 #endif
 
 /**
@@ -27,7 +27,7 @@
  *               to have at least
  * the size of (start + end + 1).
  */
-void qs_string_copy_slice(const char *source, size_t start, size_t end, char *target) 
+void raw_string_copy_slice(const char *source, size_t start, size_t end, char *target)
 {
     assert(strlen(source) >= (start + end));
     assert(start < end);
@@ -46,7 +46,7 @@ void qs_string_copy_slice(const char *source, size_t start, size_t end, char *ta
  * @param comparison  The string which will be compared and seen if its contained inside 'source'.
  * @return            True or false if the string from comparison is contained inside source or not.
  */
-bool null_string_contains(const char *self, const char *other) 
+bool raw_string_contains(const char *self, const char *other)
 {
     size_t source_size     = strlen(self);
     size_t comparison_size = strlen(other);
