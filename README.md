@@ -22,8 +22,8 @@ A simple arena implementation that can return aligned memory from a big allocati
 useful for allocation that share the same lifetime.
 
 ### qs_array.h
-A dynamic array that can track how much space it has left and increase its size. It's buffer is 
-allocated using malloc internally, meaning that a free is required by using `array\_free()`. 
+A dynamic array that can track how much space it has left and increase its size. Its buffer is 
+allocated using malloc internally, meaning that a free is required by using `array_free()`.
 
 If you wish to use a custom allocator to provide the buffer to the array, use a Span instead, since 
 reallocating the size of a custom allocator, like an Arena, would require much more work, and the
@@ -41,5 +41,5 @@ strings for **only some use cases**, making it easy to traverse the string and s
 size.
 
 ### qs_string_util.h
-Simple null terminated string utilities (not tied to the dedicated container string inside 
-`qs_string`).
+Simple null terminated string (also called raw strings here) utilities (not tied to the dedicated 
+container string inside `qs_string`).
